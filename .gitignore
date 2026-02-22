@@ -1,0 +1,9 @@
+node_modules/
+dist/
+out/
+.cache/
+*.tsbuildinfo
+.DS_Store
+.env
+.npmrc
+demo.sh

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>secaudit — Demo Intro</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0b;
+    --fg: #e8e6e3;
+    --dim: #6b6966;
+    --accent: #22c55e;
+    --warn: #eab308;
+    --fail: #ef4444;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Instrument Serif', Georgia, serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(34,197,94,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 80% 30%, rgba(234,179,8,0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 1.08;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  h1 code {
+    font-family: var(--mono);
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(34,197,94,0.08);
+    padding: 2px 12px;
+    border-radius: 6px;
+  }
+
+  .subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--dim);
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .thesis {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .thesis-card {
+    flex: 1;
+    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thesis-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .thesis-card.command::before { background: var(--accent); }
+  .thesis-card.intent::before { background: var(--warn); }
+
+  .card-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .thesis-card.command .card-label { color: var(--accent); }
+  .thesis-card.intent .card-label { color: var(--warn); }
+
+  .card-line {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--dim);
+  }
+
+  .card-line strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .ledger-preview {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.0s forwards;
+  }
+
+  .ledger-preview pre {
+    font-size: 12px;
+    line-height: 1.65;
+    padding: 24px 28px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.015);
+    overflow-x: auto;
+  }
+
+  .ledger-preview .key { color: var(--dim); }
+  .ledger-preview .val-true { color: var(--accent); }
+  .ledger-preview .val-false { color: var(--fail); }
+  .ledger-preview .val-str { color: #93c5fd; }
+  .ledger-preview .val-arr { color: var(--dim); }
+  .ledger-preview .label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .compare {
+    display: flex;
+    gap: 16px;
+  }
+
+  .compare pre {
+    flex: 1;
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+
+  .tech {
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.8;
+  }
+
+  .tech span {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    margin: 0 2px;
+  }
+
+  .context {
+    text-align: right;
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.8;
+  }
+
+  .context strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="eyebrow">System Design Demo</div>
+
+    <h1>
+      <code>secaudit</code> analyzes<br>
+      SEC 10-K filings
+    </h1>
+    <div class="subtitle">
+      Proving that intent-based invocation is probabilistic,<br>
+      and command-driven invocation is deterministic.
+    </div>
+
+    <div class="thesis">
+      <div class="thesis-card command">
+        <div class="card-label">Command Mode</div>
+        <div class="card-line"><strong>Deterministic.</strong> The control plane enforces every workflow step in fixed order. Missing a required section = hard failure. The audit ledger guarantees <strong>requiredSteps === executedSteps</strong>.</div>
+      </div>
+      <div class="thesis-card intent">
+        <div class="card-label">Intent Mode</div>
+        <div class="card-line"><strong>Probabilistic.</strong> A natural language router interprets what to run. Steps may be silently skipped. The output looks fine&mdash;but the ledger reveals the gap between what <em>should</em> run and what <em>did</em> run.</div>
+      </div>
+    </div>
+
+    <div class="ledger-preview">
+      <div class="compare">
+        <pre><span class="label">Command Ledger</span>
+<span class="key">"deterministic":</span> <span class="val-true">true</span>
+<span class="key">"executedSteps":</span> <span class="val-arr">[6/6]</span>
+<span class="key">"skippedSteps":</span>  <span class="val-arr">[]</span>
+<span class="key">"passed":</span>        <span class="val-true">true</span></pre>
+
+        <pre><span class="label">Intent Ledger</span>
+<span class="key">"deterministic":</span> <span class="val-false">false</span>
+<span class="key">"executedSteps":</span> <span class="val-arr">[4/6]</span>
+<span class="key">"skippedSteps":</span>  <span class="val-str">["validate","generate"]</span>
+<span class="key">"passed":</span>        <span class="val-true">true</span></pre>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="tech">
+        <span>TypeScript</span>
+        <span>SEC EDGAR API</span>
+        <span>cheerio</span>
+        <span>75 tests</span>
+      </div>
+      <div class="context">
+        Real public data &middot; No mocks<br>
+        <strong>Live SEC filing fetch + parse + audit</strong>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
